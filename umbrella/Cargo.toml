@@ -40,6 +40,7 @@ std = [
 	"cumulus-primitives-timestamp?/std",
 	"cumulus-primitives-utility?/std",
 	"cumulus-test-relay-sproof-builder?/std",
+	"emulated-integration-tests-common?/std",
 	"frame-benchmarking-pallet-pov?/std",
 	"frame-benchmarking?/std",
 	"frame-election-provider-support?/std",
@@ -137,6 +138,7 @@ std = [
 	"pallet-recovery?/std",
 	"pallet-referenda?/std",
 	"pallet-remark?/std",
+	"pallet-revive-types?/std",
 	"pallet-revive?/std",
 	"pallet-root-offences?/std",
 	"pallet-root-testing?/std",
@@ -158,6 +160,7 @@ std = [
 	"pallet-state-trie-migration?/std",
 	"pallet-statement?/std",
 	"pallet-sudo?/std",
+	"pallet-time-scheduler?/std",
 	"pallet-timestamp?/std",
 	"pallet-tips?/std",
 	"pallet-transaction-payment-rpc-runtime-api?/std",
@@ -243,6 +246,7 @@ std = [
 	"xcm-runtime-apis?/std",
 ]
 runtime-benchmarks = [
+	"asset-test-utils?/runtime-benchmarks",
 	"assets-common?/runtime-benchmarks",
 	"bridge-hub-common?/runtime-benchmarks",
 	"bridge-runtime-common?/runtime-benchmarks",
@@ -253,6 +257,7 @@ runtime-benchmarks = [
 	"cumulus-pallet-xcmp-queue?/runtime-benchmarks",
 	"cumulus-primitives-core?/runtime-benchmarks",
 	"cumulus-primitives-utility?/runtime-benchmarks",
+	"emulated-integration-tests-common?/runtime-benchmarks",
 	"frame-benchmarking-cli?/runtime-benchmarks",
 	"frame-benchmarking-pallet-pov?/runtime-benchmarks",
 	"frame-benchmarking/runtime-benchmarks",
@@ -349,6 +354,7 @@ runtime-benchmarks = [
 	"pallet-staking?/runtime-benchmarks",
 	"pallet-state-trie-migration?/runtime-benchmarks",
 	"pallet-sudo?/runtime-benchmarks",
+	"pallet-time-scheduler?/runtime-benchmarks",
 	"pallet-timestamp?/runtime-benchmarks",
 	"pallet-tips?/runtime-benchmarks",
 	"pallet-transaction-payment?/runtime-benchmarks",
@@ -366,6 +372,7 @@ runtime-benchmarks = [
 	"pallet-xcm-precompiles?/runtime-benchmarks",
 	"pallet-xcm?/runtime-benchmarks",
 	"parachains-common?/runtime-benchmarks",
+	"parachains-runtimes-test-utils?/runtime-benchmarks",
 	"polkadot-cli?/runtime-benchmarks",
 	"polkadot-node-metrics?/runtime-benchmarks",
 	"polkadot-omni-node-lib?/runtime-benchmarks",
@@ -388,6 +395,7 @@ runtime-benchmarks = [
 try-runtime = [
 	"asset-test-utils?/try-runtime",
 	"assets-common?/try-runtime",
+	"bridge-hub-test-utils?/try-runtime",
 	"cumulus-pallet-aura-ext?/try-runtime",
 	"cumulus-pallet-dmp-queue?/try-runtime",
 	"cumulus-pallet-parachain-system?/try-runtime",
@@ -396,6 +404,7 @@ try-runtime = [
 	"cumulus-pallet-xcm?/try-runtime",
 	"cumulus-pallet-xcmp-queue?/try-runtime",
 	"cumulus-ping?/try-runtime",
+	"emulated-integration-tests-common?/try-runtime",
 	"frame-benchmarking-pallet-pov?/try-runtime",
 	"frame-election-provider-support?/try-runtime",
 	"frame-executive?/try-runtime",
@@ -498,6 +507,7 @@ try-runtime = [
 	"pallet-state-trie-migration?/try-runtime",
 	"pallet-statement?/try-runtime",
 	"pallet-sudo?/try-runtime",
+	"pallet-time-scheduler?/try-runtime",
 	"pallet-timestamp?/try-runtime",
 	"pallet-tips?/try-runtime",
 	"pallet-transaction-payment?/try-runtime",
@@ -514,6 +524,7 @@ try-runtime = [
 	"pallet-xcm-precompiles?/try-runtime",
 	"pallet-xcm?/try-runtime",
 	"parachains-common?/try-runtime",
+	"parachains-runtimes-test-utils?/try-runtime",
 	"polkadot-cli?/try-runtime",
 	"polkadot-omni-node-lib?/try-runtime",
 	"polkadot-runtime-common?/try-runtime",
@@ -706,6 +717,7 @@ runtime-full = [
 	"pallet-remark",
 	"pallet-revive",
 	"pallet-revive-proc-macro",
+	"pallet-revive-types",
 	"pallet-revive-uapi",
 	"pallet-root-offences",
 	"pallet-root-testing",
@@ -728,6 +740,7 @@ runtime-full = [
 	"pallet-state-trie-migration",
 	"pallet-statement",
 	"pallet-sudo",
+	"pallet-time-scheduler",
 	"pallet-timestamp",
 	"pallet-tips",
 	"pallet-transaction-payment",
@@ -888,6 +901,7 @@ node = [
 	"cumulus-client-bootnodes",
 	"cumulus-client-cli",
 	"cumulus-client-collator",
+	"cumulus-client-collator-discovery",
 	"cumulus-client-consensus-aura",
 	"cumulus-client-consensus-common",
 	"cumulus-client-consensus-relay-chain",
@@ -1716,6 +1730,11 @@ default-features = false
 optional = true
 path = "../substrate/frame/revive/proc-macro"
 
+[dependencies.pallet-revive-types]
+default-features = false
+optional = true
+path = "../substrate/frame/revive/types"
+
 [dependencies.pallet-revive-uapi]
 default-features = false
 optional = true
@@ -1825,6 +1844,11 @@ path = "../substrate/frame/statement"
 default-features = false
 optional = true
 path = "../substrate/frame/sudo"
+
+[dependencies.pallet-time-scheduler]
+default-features = false
+optional = true
+path = "../substrate/frame/time-scheduler"
 
 [dependencies.pallet-timestamp]
 default-features = false
@@ -2285,6 +2309,11 @@ path = "../cumulus/client/cli"
 default-features = false
 optional = true
 path = "../cumulus/client/collator"
+
+[dependencies.cumulus-client-collator-discovery]
+default-features = false
+optional = true
+path = "../cumulus/client/collator-discovery"
 
 [dependencies.cumulus-client-consensus-aura]
 default-features = false

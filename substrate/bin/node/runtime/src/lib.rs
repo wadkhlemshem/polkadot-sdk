@@ -518,6 +518,29 @@ impl pallet_scheduler::Config for Runtime {
 	type BlockNumberProvider = frame_system::Pallet<Runtime>;
 }
 
+parameter_types! {
+	/// 1-minute bucket resolution (same as the default in the pallet).
+	pub const TimeSchedulerBucketResolution: u32 = 60_000;
+}
+
+impl pallet_time_scheduler::Config for Runtime {
+	type RuntimeEvent = RuntimeEvent;
+	type RuntimeOrigin = RuntimeOrigin;
+	type PalletsOrigin = OriginCaller;
+	type RuntimeCall = RuntimeCall;
+	type MaximumWeight = MaximumSchedulerWeight;
+	type ScheduleOrigin = EnsureRoot<AccountId>;
+	type OriginPrivilegeCmp = EqualPrivilegeOnly;
+	type BucketResolution = TimeSchedulerBucketResolution;
+	#[cfg(feature = "runtime-benchmarks")]
+	type MaxScheduledPerBucket = ConstU32<512>;
+	#[cfg(not(feature = "runtime-benchmarks"))]
+	type MaxScheduledPerBucket = ConstU32<50>;
+	type WeightInfo = pallet_time_scheduler::weights::SubstrateWeight<Runtime>;
+	type Preimages = Preimage;
+	type TimestampProvider = Timestamp;
+}
+
 impl pallet_glutton::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 	type AdminOrigin = EnsureRoot<AccountId>;
@@ -986,7 +1009,8 @@ impl pallet_delegated_staking::Config for Runtime {
 }
 
 parameter_types! {
-	pub const PostUnbondPoolsWindow: u32 = 4;
+	// Buffer (4) + bonding duration (24 * 28).
+	pub const MaxUnbondingPools: u32 = 24 * 28 + 4;
 	pub const NominationPoolsPalletId: PalletId = PalletId(*b"py/nopls");
 	pub const MaxPointsToBalance: u8 = 10;
 }
@@ -1015,7 +1039,7 @@ impl pallet_nomination_pools::Config for Runtime {
 	type U256ToBalance = U256ToBalance;
 	type StakeAdapter =
 		pallet_nomination_pools::adapter::DelegateStake<Self, Staking, DelegatedStaking>;
-	type PostUnbondingPoolsWindow = PostUnbondPoolsWindow;
+	type MaxUnbondingPools = MaxUnbondingPools;
 	type MaxMetadataLen = ConstU32<256>;
 	type MaxUnbonding = ConstU32<8>;
 	type PalletId = NominationPoolsPalletId;
@@ -2927,6 +2951,9 @@ mod runtime {
 
 	#[runtime::pallet_index(94)]
 	pub type Dap = pallet_dap::Pallet<Runtime>;
+
+	#[runtime::pallet_index(95)]
+	pub type TimeScheduler = pallet_time_scheduler::Pallet<Runtime>;
 }
 
 /// The address format for describing accounts.
@@ -3293,7 +3320,6 @@ mod benches {
 		[pallet_assets_precompiles, AssetsPrecompiles]
 		[pallet_vesting_precompiles, VestingPrecompiles]
 		[pallet_multisig, Multisig]
-		[pallet_nomination_pools, NominationPoolsBench::<Runtime>]
 		[pallet_offences, OffencesBench::<Runtime>]
 		[pallet_oracle, Oracle]
 		[pallet_preimage, Preimage]
@@ -3314,6 +3340,7 @@ mod benches {
 		[frame_system, SystemBench::<Runtime>]
 		[frame_system_extensions, SystemExtensionsBench::<Runtime>]
 		[pallet_timestamp, Timestamp]
+		[pallet_time_scheduler, TimeScheduler]
 		[pallet_tips, Tips]
 		[pallet_transaction_storage, TransactionStorage]
 		[pallet_treasury, Treasury]
@@ -3966,7 +3993,6 @@ pallet_revive::impl_runtime_apis_plus_revive_traits!(
 			use frame_system_benchmarking::Pallet as SystemBench;
 			use frame_system_benchmarking::extensions::Pallet as SystemExtensionsBench;
 			use baseline::Pallet as BaselineBench;
-			use pallet_nomination_pools_benchmarking::Pallet as NominationPoolsBench;
 
 			let mut list = Vec::<BenchmarkList>::new();
 			list_benchmarks!(list, extra);
@@ -3992,7 +4018,6 @@ pallet_revive::impl_runtime_apis_plus_revive_traits!(
 			use frame_system_benchmarking::Pallet as SystemBench;
 			use frame_system_benchmarking::extensions::Pallet as SystemExtensionsBench;
 			use baseline::Pallet as BaselineBench;
-			use pallet_nomination_pools_benchmarking::Pallet as NominationPoolsBench;
 
 			impl pallet_session_benchmarking::Config for Runtime {
 				fn generate_session_keys_and_proof(owner: Self::AccountId) -> (Self::Keys, Vec<u8>) {
@@ -4005,7 +4030,6 @@ pallet_revive::impl_runtime_apis_plus_revive_traits!(
 			impl frame_system_benchmarking::Config for Runtime {}
 			impl pallet_transaction_payment::BenchmarkConfig for Runtime {}
 			impl baseline::Config for Runtime {}
-			impl pallet_nomination_pools_benchmarking::Config for Runtime {}
 
 			use frame_support::traits::WhitelistedStorageKeys;
 			let mut whitelist: Vec<TrackedStorageKey> = AllPalletsWithSystem::whitelisted_storage_keys();

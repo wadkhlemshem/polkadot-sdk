@@ -84,6 +84,11 @@ pub use cumulus_client_cli;
 #[cfg(feature = "cumulus-client-collator")]
 pub use cumulus_client_collator;
 
+/// Parachain collator authority discovery — keeps collators connected via reserved peers on
+/// the block-announce protocol.
+#[cfg(feature = "cumulus-client-collator-discovery")]
+pub use cumulus_client_collator_discovery;
+
 /// AURA consensus algorithm for parachains.
 #[cfg(feature = "cumulus-client-consensus-aura")]
 pub use cumulus_client_consensus_aura;
@@ -664,6 +669,11 @@ pub use pallet_revive;
 #[cfg(feature = "pallet-revive-proc-macro")]
 pub use pallet_revive_proc_macro;
 
+/// Wire types used by pallet-revive which have higher stability guarantees than internal
+/// pallet-revive types.
+#[cfg(feature = "pallet-revive-types")]
+pub use pallet_revive_types;
+
 /// Exposes all the host functions that a contract can import.
 #[cfg(feature = "pallet-revive-uapi")]
 pub use pallet_revive_uapi;
@@ -754,6 +764,10 @@ pub use pallet_statement;
 /// FRAME pallet for sudo.
 #[cfg(feature = "pallet-sudo")]
 pub use pallet_sudo;
+
+/// FRAME Time-Based Scheduler pallet.
+#[cfg(feature = "pallet-time-scheduler")]
+pub use pallet_time_scheduler;
 
 /// FRAME Timestamp Module.
 #[cfg(feature = "pallet-timestamp")]
